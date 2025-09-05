@@ -38,24 +38,36 @@ This project implements two coordinated programs that work together to provide c
    ```bash
    git clone https://github.com/alienspirit7/Repo4.git
    cd Repo4
+   ```
 
-Set up the environment:
-bashpython3 -m venv venv
-source venv/bin/activate
-pip install pytest  # for running tests
+2. **Set up the environment:**
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install pytest  # for running tests
+   ```
 
-Install and start services:
-bash./bin/install-services-macos.sh
+3. **Install and start services:**
+   ```bash
+   ./bin/install-services-macos.sh
+   ```
 
-Verify everything is working:
-bash./bin/monitor-services-macos.sh
+4. **Verify everything is working:**
+   ```bash
+   ./bin/monitor-services-macos.sh
+   ```
 
+### Expected Output
 
-Expected Output
 When running correctly, you should see:
+```
 ✅ System Log Writer: ACTUALLY WORKING (recent activity)
 ✅ Last Timestamp Reader: ACTUALLY WORKING (recent log activity)
-📁 Project Structure
+```
+
+## 📁 Project Structure
+
+```
 Repo4/
 ├── bin/                              # Executable scripts
 │   ├── system-log-writer.py         # Main writer program (Python)
@@ -82,9 +94,14 @@ Repo4/
     ├── system-log-writer.log        # Writer service logs
     ├── last-timestamp-reader.log    # Reader service logs
     └── *-error.log                  # Error logs
-🔧 Usage
-Service Management
-bash# Start services
+```
+
+## 🔧 Usage
+
+### Service Management
+
+```bash
+# Start services
 ./bin/install-services-macos.sh
 
 # Check service status
@@ -97,8 +114,12 @@ launchctl unload ~/Library/LaunchAgents/com.user.last-timestamp-reader.plist
 # Restart services
 launchctl load ~/Library/LaunchAgents/com.user.system-log-writer.plist
 launchctl load ~/Library/LaunchAgents/com.user.last-timestamp-reader.plist
-Manual Testing
-bash# Test Writer manually
+```
+
+### Manual Testing
+
+```bash
+# Test Writer manually
 python3 bin/system-log-writer.py &
 WRITER_PID=$!
 
@@ -108,8 +129,12 @@ READER_PID=$!
 
 # Stop manual tests
 kill $WRITER_PID $READER_PID
-Monitoring
-bash# Watch live log output
+```
+
+### Monitoring
+
+```bash
+# Watch live log output
 tail -f logs/system-logs.log
 
 # Check service health
@@ -117,9 +142,14 @@ tail -f logs/system-logs.log
 
 # Verify file permissions
 ./bin/verify-permissions.sh
-🧪 Testing
-Run Unit Tests
-bash# Activate virtual environment
+```
+
+## 🧪 Testing
+
+### Run Unit Tests
+
+```bash
+# Activate virtual environment
 source venv/bin/activate
 
 # Run all tests
@@ -127,31 +157,47 @@ python3 -m unittest discover tests/ -v
 
 # Or use pytest (if installed)
 python3 -m pytest tests/ -v
-Run Integration Tests
-bash# Complete system test
+```
+
+### Run Integration Tests
+
+```bash
+# Complete system test
 ./bin/test-services.sh
-📊 Technical Specifications
-System Log Writer (Program A)
+```
 
-Language: Python 3.7+
-Interval: 10 seconds
-Output: YYYY-MM-DD HH:MM:SS format timestamps
-Log File: logs/system-logs.log
-Permissions: Read/Write access to log file
+## 📊 Technical Specifications
 
-Last Timestamp Reader (Program B)
+### System Log Writer (Program A)
 
-Language: Python 3.7+
-Interval: 7 seconds
-Input: logs/system-logs.log
-Output: Console display of last timestamp
-Permissions: Read-only access to log file
+- **Language**: Python 3.7+
+- **Interval**: 10 seconds
+- **Output**: `YYYY-MM-DD HH:MM:SS` format timestamps
+- **Log File**: `logs/system-logs.log`
+- **Permissions**: Read/Write access to log file
 
-File Permissions
-File TypePermissionsDescriptionScripts755 (rwxr-xr-x)Executable by owner, readable by allLog files644 (rw-r--r--)Writable by owner, readable by allConfig files644 (rw-r--r--)Writable by owner, readable by all
-🛠️ Troubleshooting
-Services Won't Start
-bash# Check service status
+### Last Timestamp Reader (Program B)
+
+- **Language**: Python 3.7+
+- **Interval**: 7 seconds  
+- **Input**: `logs/system-logs.log`
+- **Output**: Console display of last timestamp
+- **Permissions**: Read-only access to log file
+
+### File Permissions
+
+| File Type | Permissions | Description |
+|-----------|-------------|-------------|
+| Scripts | 755 (rwxr-xr-x) | Executable by owner, readable by all |
+| Log files | 644 (rw-r--r--) | Writable by owner, readable by all |
+| Config files | 644 (rw-r--r--) | Writable by owner, readable by all |
+
+## 🛠️ Troubleshooting
+
+### Services Won't Start
+
+```bash
+# Check service status
 launchctl list | grep com.user
 
 # Check for errors
@@ -160,45 +206,53 @@ tail logs/last-timestamp-reader-error.log
 
 # Verify permissions
 ./bin/verify-permissions.sh
-Log File Issues
-bash# Check if log file exists and is writable
+```
+
+### Log File Issues
+
+```bash
+# Check if log file exists and is writable
 ls -la logs/system-logs.log
 
 # Check recent activity
 tail -n 5 logs/system-logs.log
 date
-Common Issues
+```
 
-Python Path Issues: Ensure plist files point to correct Python installation
-Permission Denied: Run ./bin/verify-permissions.sh to fix
-Service Not Loading: Check Console.app for launchd errors
-Virtual Environment: Services use absolute paths, don't require active venv
+### Common Issues
 
-🔒 Security
+1. **Python Path Issues**: Ensure plist files point to correct Python installation
+2. **Permission Denied**: Run `./bin/verify-permissions.sh` to fix
+3. **Service Not Loading**: Check Console.app for launchd errors
+4. **Virtual Environment**: Services use absolute paths, don't require active venv
 
-✅ Principle of Least Privilege: Reader has read-only access
-✅ File Permission Controls: Strict permission model implemented
-✅ No Root Required: All operations run under user context
-✅ Input Validation: Robust error handling for malformed data
-✅ Resource Limits: Bounded memory and CPU usage
+## 🔒 Security
 
-📈 Performance
+- ✅ **Principle of Least Privilege**: Reader has read-only access
+- ✅ **File Permission Controls**: Strict permission model implemented
+- ✅ **No Root Required**: All operations run under user context
+- ✅ **Input Validation**: Robust error handling for malformed data
+- ✅ **Resource Limits**: Bounded memory and CPU usage
 
-CPU Usage: Minimal (< 0.1% average)
-Memory Footprint: ~10-15MB per service
-Disk I/O: Minimal append-only writes
-Log Growth: ~50KB per day (configurable with logrotate)
+## 📈 Performance
 
-🤝 Contributing
+- **CPU Usage**: Minimal (< 0.1% average)
+- **Memory Footprint**: ~10-15MB per service
+- **Disk I/O**: Minimal append-only writes
+- **Log Growth**: ~50KB per day (configurable with logrotate)
 
-Fork the repository
-Create a feature branch (git checkout -b feature/amazing-feature)
-Commit your changes (git commit -m 'Add amazing feature')
-Push to the branch (git push origin feature/amazing-feature)
-Open a Pull Request
+## 🤝 Contributing
 
-Development Setup
-bash# Clone and setup development environment
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Setup
+
+```bash
+# Clone and setup development environment
 git clone https://github.com/alienspirit7/Repo4.git
 cd Repo4
 python3 -m venv venv
@@ -207,19 +261,24 @@ pip install pytest
 
 # Run tests before committing
 python3 -m unittest discover tests/ -v
-📄 License
-This project is licensed under the MIT License - see the LICENSE file for details.
-🙏 Acknowledgments
+```
 
-Built following comprehensive PDR (Preliminary Design Review) specifications
-Implements industry-standard logging and monitoring practices
-Designed for reliability, maintainability, and security
+## 📄 License
 
-📞 Support
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-📧 Issues: GitHub Issues
-📚 Documentation: See /docs/ directory
-🐛 Bug Reports: Use GitHub Issues with detailed reproduction steps
+## 🙏 Acknowledgments
 
+- Built following comprehensive PDR (Preliminary Design Review) specifications
+- Implements industry-standard logging and monitoring practices
+- Designed for reliability, maintainability, and security
 
-⭐ If this project helped you, please consider giving it a star!
+## 📞 Support
+
+- 📧 **Issues**: [GitHub Issues](https://github.com/alienspirit7/Repo4/issues)
+- 📚 **Documentation**: See `/docs/` directory
+- 🐛 **Bug Reports**: Use GitHub Issues with detailed reproduction steps
+
+---
+
+**⭐ If this project helped you, please consider giving it a star!**
