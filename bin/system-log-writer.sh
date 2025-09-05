@@ -1,10 +1,8 @@
 #!/bin/bash
-"""
-System Log Writer - Shell Script Alternative
-Writes current system time to log file every 10 seconds
-"""
+# System Log Writer - Shell Script Alternative
+# Writes current system time to log file every 10 seconds
 
-REPO_PATH="$HOME/Documents/25D/L2/Repo4"
+REPO_PATH="/usr/local/repo4"
 LOG_FILE="$REPO_PATH/logs/system-logs.log"
 INTERVAL=10
 

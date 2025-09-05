@@ -1,10 +1,8 @@
 #!/bin/bash
-"""
-Last Timestamp Reader - Shell Script Alternative
-Reads last timestamp from log file every 7 seconds
-"""
+# Last Timestamp Reader - Shell Script Alternative
+# Reads last timestamp from log file every 7 seconds
 
-REPO_PATH="$HOME/Documents/25D/L2/Repo4"
+REPO_PATH="/usr/local/repo4"
 LOG_FILE="$REPO_PATH/logs/system-logs.log"
 INTERVAL=7
 
