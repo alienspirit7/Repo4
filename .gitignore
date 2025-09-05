@@ -1,17 +1,8 @@
-# Python
-*.pyc
-__pycache__/
-*.pyo
-*.pyd
-.Python
-venv/
-env/
-
-# Logs (optional - you might want to include sample logs)
+# Log files (don't commit actual logs)
 logs/*.log
 logs/*-error.log
 
-# OS
+# macOS
 .DS_Store
 Thumbs.db
 
@@ -22,3 +13,6 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# Keep logs directory structure but ignore log files
+!logs/.gitkeep

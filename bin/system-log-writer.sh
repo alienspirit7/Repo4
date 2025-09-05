@@ -1,5 +1,5 @@
 #!/bin/bash
-# System Log Writer - Shell Script Alternative
+# System Log Writer - Shell Script Version
 # Writes current system time to log file every 10 seconds
 
 REPO_PATH="/usr/local/repo4"

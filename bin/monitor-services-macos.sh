@@ -2,7 +2,7 @@
 # macOS Service Status Monitoring Script - IMPROVED VERSION
 # Actually checks if services are working, not just loaded
 
-REPO_PATH="$HOME/Documents/25D/L2/Repo4"
+REPO_PATH="/usr/local/repo4"
 LOG_FILE="$REPO_PATH/logs/system-logs.log"
 
 echo "=== macOS Service Status Check ==="

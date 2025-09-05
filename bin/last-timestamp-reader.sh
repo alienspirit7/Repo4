@@ -1,5 +1,5 @@
 #!/bin/bash
-# Last Timestamp Reader - Shell Script Alternative
+# Last Timestamp Reader - Shell Script Version
 # Reads last timestamp from log file every 7 seconds
 
 REPO_PATH="/usr/local/repo4"
