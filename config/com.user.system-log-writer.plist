@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.user.system-log-writer</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/alienspirit/Documents/25D/L2/Repo4/venv/bin/python3</string>
+        <string>/Users/alienspirit/Documents/25D/L2/Repo4/bin/system-log-writer.py</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>/Users/alienspirit/Documents/25D/L2/Repo4</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/Users/alienspirit/Documents/25D/L2/Repo4/logs/system-log-writer.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/alienspirit/Documents/25D/L2/Repo4/logs/system-log-writer-error.log</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/Users/alienspirit/Documents/25D/L2/Repo4/venv/bin:/usr/bin:/bin</string>
+    </dict>
+</dict>
+</plist>

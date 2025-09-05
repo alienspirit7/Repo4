@@ -1,0 +1,17 @@
+[Unit]
+Description=Last Timestamp Reader Service
+After=system-log-writer.service
+Wants=system-log-writer.service
+
+[Service]
+Type=simple
+ExecStart=%h/Documents/25D/L2/Repo4/bin/last-timestamp-reader.py
+WorkingDirectory=%h/Documents/25D/L2/Repo4
+Restart=always
+RestartSec=5
+User=%i
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

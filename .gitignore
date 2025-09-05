@@ -4,12 +4,12 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
-env/
 venv/
+env/
 
-# Logs
+# Logs (optional - you might want to include sample logs)
 logs/*.log
-*.log
+logs/*-error.log
 
 # OS
 .DS_Store
@@ -18,3 +18,7 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+
+# Temporary files
+*.tmp
+*.temp
