@@ -1,0 +1,571 @@
+{
+  "project": {
+    "name": "System Log Writer & Last Timestamp Reader Implementation",
+    "description": "Interdependent Timestamp Logging System",
+    "totalDuration": "3 days",
+    "estimatedEffort": "20-24 hours"
+  },
+  "phases": [
+    {
+      "phaseId": "phase-1",
+      "phaseName": "Project Setup & Environment",
+      "day": "Day 1",
+      "timeSlot": "Morning",
+      "totalDuration": "1 hour 5 minutes",
+      "tasks": [
+        {
+          "taskId": "1.1",
+          "taskName": "Repository Structure Creation",
+          "duration": "30 minutes",
+          "dependencies": [],
+          "priority": "High",
+          "deliverables": [
+            "Complete directory structure",
+            "Initial configuration files",
+            "Basic documentation framework"
+          ],
+          "steps": [
+            "Create main repository directory: mkdir -p ~/Documents/25D/L2/Repo4",
+            "Navigate to directory: cd ~/Documents/25D/L2/Repo4",
+            "Create directory structure: mkdir -p bin config logs tests docs",
+            "Create placeholder files: touch bin/.gitkeep config/.gitkeep logs/.gitkeep tests/.gitkeep docs/.gitkeep"
+          ],
+          "verification": [
+            "tree ~/Documents/25D/L2/Repo4"
+          ],
+          "successCriteria": [
+            "All directories created",
+            "Placeholder files in place",
+            "Directory structure matches specification"
+          ]
+        },
+        {
+          "taskId": "1.2",
+          "taskName": "Environment Setup",
+          "duration": "20 minutes",
+          "dependencies": ["1.1"],
+          "priority": "High",
+          "deliverables": [
+            "Python virtual environment",
+            "Testing framework installation",
+            "Development dependencies"
+          ],
+          "steps": [
+            "Navigate to repository: cd ~/Documents/25D/L2/Repo4",
+            "Create virtual environment: python3 -m venv venv",
+            "Activate virtual environment: source venv/bin/activate",
+            "Install pytest: pip install pytest",
+            "Create requirements file: echo 'pytest>=6.0' > requirements-dev.txt"
+          ],
+          "verification": [
+            "which python3",
+            "pip list"
+          ],
+          "successCriteria": [
+            "Virtual environment created and activated",
+            "Pytest installed and available",
+            "Requirements file created"
+          ]
+        },
+        {
+          "taskId": "1.3",
+          "taskName": "Git Repository Initialization",
+          "duration": "15 minutes",
+          "dependencies": ["1.1"],
+          "priority": "Medium",
+          "deliverables": [
+            "Git repository with proper .gitignore",
+            "Initial commit with structure"
+          ],
+          "steps": [
+            "Initialize git repository: git init",
+            "Create .gitignore file with Python, logs, OS, and IDE exclusions",
+            "Add all files: git add .",
+            "Initial commit: git commit -m 'Initial project structure'"
+          ],
+          "verification": [
+            "git status",
+            "git log --oneline"
+          ],
+          "successCriteria": [
+            "Git repository initialized",
+            "Proper .gitignore in place",
+            "Initial commit completed"
+          ]
+        }
+      ]
+    },
+    {
+      "phaseId": "phase-2",
+      "phaseName": "Core Program Implementation",
+      "day": "Day 1",
+      "timeSlot": "Afternoon",
+      "totalDuration": "2 hours 30 minutes",
+      "tasks": [
+        {
+          "taskId": "2.1",
+          "taskName": "System Log Writer Implementation",
+          "duration": "1 hour 30 minutes",
+          "dependencies": ["1.2"],
+          "priority": "High",
+          "deliverables": [
+            "Complete Python implementation of system-log-writer.py",
+            "Shell script alternative",
+            "Signal handling and error management"
+          ],
+          "steps": [
+            "Create bin/system-log-writer.py with SystemLogWriter class",
+            "Implement __init__, signal_handler, write_timestamp, and run methods",
+            "Add proper error handling and logging",
+            "Make executable: chmod 755 bin/system-log-writer.py",
+            "Create shell script alternative: bin/system-log-writer.sh",
+            "Make shell script executable: chmod 755 bin/system-log-writer.sh"
+          ],
+          "verification": [
+            "Test Python version: python3 bin/system-log-writer.py & (run for 15 seconds)",
+            "Check log file creation and entries: cat logs/system-logs.log",
+            "Verify proper signal handling with Ctrl+C"
+          ],
+          "successCriteria": [
+            "Python script runs without errors",
+            "Timestamps written to log file every 10 seconds",
+            "Proper YYYY-MM-DD HH:MM:SS format",
+            "Graceful shutdown on signals",
+            "Shell script alternative working"
+          ]
+        },
+        {
+          "taskId": "2.2",
+          "taskName": "Last Timestamp Reader Implementation",
+          "duration": "1 hour",
+          "dependencies": ["2.1"],
+          "priority": "High",
+          "deliverables": [
+            "Complete Python implementation of last-timestamp-reader.py",
+            "Shell script alternative",
+            "Error handling for various file states"
+          ],
+          "steps": [
+            "Create bin/last-timestamp-reader.py with LastTimestampReader class",
+            "Implement __init__, signal_handler, read_last_timestamp, and run methods",
+            "Add error handling for file not found, empty file, permission errors",
+            "Make executable: chmod 755 bin/last-timestamp-reader.py",
+            "Create shell script alternative: bin/last-timestamp-reader.sh",
+            "Make shell script executable: chmod 755 bin/last-timestamp-reader.sh"
+          ],
+          "verification": [
+            "Test both programs together",
+            "Run writer in background, then reader",
+            "Verify reader displays timestamps every 7 seconds",
+            "Test error handling with missing/empty log file"
+          ],
+          "successCriteria": [
+            "Reader successfully reads last timestamp",
+            "Proper error handling for all file states",
+            "7-second interval working correctly",
+            "Both programs work together without conflicts"
+          ]
+        }
+      ]
+    },
+    {
+      "phaseId": "phase-3",
+      "phaseName": "Service Configuration",
+      "day": "Day 2",
+      "timeSlot": "Morning",
+      "totalDuration": "1 hour 30 minutes",
+      "tasks": [
+        {
+          "taskId": "3.1",
+          "taskName": "macOS Service Configuration",
+          "duration": "45 minutes",
+          "dependencies": ["2.2"],
+          "priority": "High",
+          "condition": "if deploying on macOS",
+          "deliverables": [
+            "launchd plist files for both services",
+            "Service installation script"
+          ],
+          "steps": [
+            "Create config/com.user.system-log-writer.plist",
+            "Create config/com.user.last-timestamp-reader.plist",
+            "Set proper paths, working directory, and environment variables",
+            "Configure RunAtLoad and KeepAlive for auto-restart",
+            "Create bin/install-services-macos.sh installation script",
+            "Make installation script executable"
+          ],
+          "verification": [
+            "./bin/install-services-macos.sh",
+            "launchctl list | grep com.user"
+          ],
+          "successCriteria": [
+            "Services load without errors",
+            "Services appear in launchctl list",
+            "Auto-restart functionality working",
+            "Services start on boot"
+          ]
+        },
+        {
+          "taskId": "3.2",
+          "taskName": "Linux Service Configuration",
+          "duration": "45 minutes",
+          "dependencies": ["2.2"],
+          "priority": "High",
+          "condition": "if deploying on Linux",
+          "deliverables": [
+            "systemd service files for both services",
+            "Service installation script"
+          ],
+          "steps": [
+            "Create config/system-log-writer.service",
+            "Create config/last-timestamp-reader.service",
+            "Configure service dependencies and restart policies",
+            "Create bin/install-services.sh installation script",
+            "Make installation script executable"
+          ],
+          "verification": [
+            "./bin/install-services.sh",
+            "systemctl --user status system-log-writer.service"
+          ],
+          "successCriteria": [
+            "Services start without errors",
+            "Service status shows active/running",
+            "Auto-restart on failure working",
+            "Services enabled for boot"
+          ]
+        }
+      ]
+    },
+    {
+      "phaseId": "phase-4",
+      "phaseName": "Testing Implementation",
+      "day": "Day 2",
+      "timeSlot": "Afternoon",
+      "totalDuration": "3 hours",
+      "tasks": [
+        {
+          "taskId": "4.1",
+          "taskName": "Unit Test Development",
+          "duration": "2 hours",
+          "dependencies": ["2.2"],
+          "priority": "High",
+          "deliverables": [
+            "Complete unit test suite for both programs",
+            "Test automation framework",
+            "Code coverage reporting"
+          ],
+          "steps": [
+            "Create tests/test_system_log_writer.py",
+            "Implement tests for timestamp format, file creation, append operations",
+            "Create tests/test_last_timestamp_reader.py",
+            "Implement tests for file reading, error handling, empty file scenarios",
+            "Create bin/run-tests.sh test runner script",
+            "Make test runner executable"
+          ],
+          "verification": [
+            "chmod 755 bin/run-tests.sh",
+            "./bin/run-tests.sh"
+          ],
+          "successCriteria": [
+            "All unit tests pass",
+            "Code coverage >90%",
+            "Test automation working",
+            "Error scenarios properly tested"
+          ]
+        },
+        {
+          "taskId": "4.2",
+          "taskName": "Integration Testing",
+          "duration": "1 hour",
+          "dependencies": ["4.1"],
+          "priority": "Medium",
+          "deliverables": [
+            "Integration test scenarios",
+            "Service coordination tests",
+            "End-to-end validation"
+          ],
+          "steps": [
+            "Create bin/test-integration.sh",
+            "Implement concurrent program testing",
+            "Test file sharing and coordination",
+            "Validate timing intervals",
+            "Make integration test executable"
+          ],
+          "verification": [
+            "chmod 755 bin/test-integration.sh",
+            "./bin/test-integration.sh"
+          ],
+          "successCriteria": [
+            "Both programs run simultaneously without conflicts",
+            "File coordination working properly",
+            "Timing intervals accurate",
+            "Integration tests pass"
+          ]
+        }
+      ]
+    },
+    {
+      "phaseId": "phase-5",
+      "phaseName": "Monitoring & Management Tools",
+      "day": "Day 3",
+      "timeSlot": "Morning",
+      "totalDuration": "2 hours",
+      "tasks": [
+        {
+          "taskId": "5.1",
+          "taskName": "Service Monitoring Implementation",
+          "duration": "1 hour 30 minutes",
+          "dependencies": ["3.1", "3.2"],
+          "priority": "High",
+          "deliverables": [
+            "Comprehensive service monitoring script",
+            "Health check automation",
+            "Status reporting"
+          ],
+          "steps": [
+            "Create bin/monitor-services-macos.sh",
+            "Implement service status checking",
+            "Add health check with timestamp validation",
+            "Create bin/verify-permissions.sh",
+            "Implement permission verification for all files",
+            "Make monitoring scripts executable"
+          ],
+          "verification": [
+            "chmod 755 bin/monitor-services-macos.sh bin/verify-permissions.sh",
+            "./bin/monitor-services-macos.sh",
+            "./bin/verify-permissions.sh"
+          ],
+          "successCriteria": [
+            "Monitoring script detects service status accurately",
+            "Health checks identify working vs non-working services",
+            "Permission verification catches issues",
+            "Status reporting clear and actionable"
+          ]
+        },
+        {
+          "taskId": "5.2",
+          "taskName": "Log Management Configuration",
+          "duration": "30 minutes",
+          "dependencies": ["2.1"],
+          "priority": "Medium",
+          "deliverables": [
+            "Log rotation configuration",
+            "Log cleanup automation",
+            "Archive management"
+          ],
+          "steps": [
+            "Create config/logrotate.conf",
+            "Configure daily rotation, 7-day retention",
+            "Create bin/cleanup-logs.sh",
+            "Implement old log file cleanup",
+            "Make cleanup script executable"
+          ],
+          "verification": [
+            "chmod 755 bin/cleanup-logs.sh",
+            "./bin/cleanup-logs.sh"
+          ],
+          "successCriteria": [
+            "Log rotation configuration created",
+            "Cleanup script removes old files",
+            "Archive management working",
+            "Disk space management in place"
+          ]
+        }
+      ]
+    },
+    {
+      "phaseId": "phase-6",
+      "phaseName": "Documentation & Finalization",
+      "day": "Day 3",
+      "timeSlot": "Afternoon",
+      "totalDuration": "3 hours",
+      "tasks": [
+        {
+          "taskId": "6.1",
+          "taskName": "README Documentation",
+          "duration": "1 hour",
+          "dependencies": ["5.2"],
+          "priority": "Medium",
+          "deliverables": [
+            "Comprehensive README.md",
+            "Quick start guide",
+            "Troubleshooting section"
+          ],
+          "steps": [
+            "Create main README.md with project overview",
+            "Document installation procedures",
+            "Add usage examples and troubleshooting",
+            "Include feature highlights and system requirements"
+          ],
+          "verification": [
+            "Review README for completeness",
+            "Test installation instructions",
+            "Validate troubleshooting steps"
+          ],
+          "successCriteria": [
+            "README is comprehensive and clear",
+            "Installation instructions work",
+            "Troubleshooting covers common issues",
+            "Examples are accurate"
+          ]
+        },
+        {
+          "taskId": "6.2",
+          "taskName": "Technical Documentation",
+          "duration": "1 hour",
+          "dependencies": ["6.1"],
+          "priority": "Medium",
+          "deliverables": [
+            "API documentation",
+            "Configuration reference",
+            "Performance specifications"
+          ],
+          "steps": [
+            "Create technical specifications in docs/ directory",
+            "Document class methods and parameters",
+            "Add configuration options reference",
+            "Include performance benchmarks and limits"
+          ],
+          "verification": [
+            "Review technical docs for accuracy",
+            "Verify configuration examples work",
+            "Validate performance specifications"
+          ],
+          "successCriteria": [
+            "Technical documentation complete",
+            "Configuration examples accurate",
+            "Performance specs realistic",
+            "API documentation clear"
+          ]
+        },
+        {
+          "taskId": "6.3",
+          "taskName": "Final System Validation",
+          "duration": "1 hour",
+          "dependencies": ["6.2"],
+          "priority": "High",
+          "deliverables": [
+            "Complete system validation",
+            "Performance testing",
+            "Documentation review"
+          ],
+          "steps": [
+            "Run complete test suite: ./bin/run-tests.sh",
+            "Execute integration tests: ./bin/test-integration.sh",
+            "Install and validate services",
+            "Run 5-minute performance test",
+            "Verify resource usage within specifications"
+          ],
+          "verification": [
+            "All tests pass",
+            "Services running correctly",
+            "Performance within specifications",
+            "Documentation accurate and complete"
+          ],
+          "successCriteria": [
+            "Complete system working correctly",
+            "All tests passing",
+            "Performance within specifications",
+            "Ready for production deployment"
+          ]
+        }
+      ]
+    }
+  ],
+  "successCriteria": {
+    "phase1": [
+      "Repository structure created",
+      "Development environment ready",
+      "Git repository initialized"
+    ],
+    "phase2": [
+      "Both programs implemented and tested",
+      "Signal handling working correctly",
+      "Error handling comprehensive"
+    ],
+    "phase3": [
+      "Service configuration complete",
+      "Auto-start on boot configured",
+      "Service management working"
+    ],
+    "phase4": [
+      "Unit tests passing (>90% coverage)",
+      "Integration tests successful",
+      "Performance within specifications"
+    ],
+    "phase5": [
+      "Monitoring scripts functional",
+      "Health checks accurate",
+      "Log management configured"
+    ],
+    "phase6": [
+      "Documentation complete and accurate",
+      "System fully validated",
+      "Ready for production deployment"
+    ]
+  },
+  "commonIssues": [
+    {
+      "issue": "Permission Denied Errors",
+      "solution": "Run ./bin/verify-permissions.sh and fix permissions",
+      "commands": [
+        "./bin/verify-permissions.sh",
+        "chmod 755 bin/*.py bin/*.sh",
+        "chmod 644 logs/*.log"
+      ]
+    },
+    {
+      "issue": "Services Won't Start",
+      "solution": "Check service logs and configuration",
+      "commands": [
+        "tail logs/*-error.log",
+        "which python3",
+        "launchctl list | grep com.user",
+        "systemctl --user status system-log-writer.service"
+      ]
+    },
+    {
+      "issue": "Log File Not Created",
+      "solution": "Check directory permissions and manual execution",
+      "commands": [
+        "ls -la logs/",
+        "python3 bin/system-log-writer.py"
+      ]
+    },
+    {
+      "issue": "Tests Failing",
+      "solution": "Ensure virtual environment and dependencies",
+      "commands": [
+        "source venv/bin/activate",
+        "pip install pytest",
+        "python3 -m unittest discover tests/ -v"
+      ]
+    }
+  ],
+  "performanceExpectations": {
+    "resourceUsage": {
+      "cpu": "<0.1% per service",
+      "memory": "~10-15MB per service",
+      "diskIO": "Minimal (append-only writes)"
+    },
+    "timingAccuracy": {
+      "writer": "10-second intervals (±1 second acceptable)",
+      "reader": "7-second intervals (±1 second acceptable)"
+    },
+    "reliability": {
+      "uptime": ">99.9% (excluding planned maintenance)",
+      "dataLoss": "<0.01% acceptable",
+      "recoveryTime": "<30 seconds after failure"
+    }
+  },
+  "finalChecklist": [
+    "All phases completed successfully",
+    "All tests passing",
+    "Services running automatically",
+    "Monitoring functional",
+    "Documentation accurate",
+    "Performance within specifications",
+    "Security model implemented correctly",
+    "Ready for production use"
+  ]
+}
