@@ -1,0 +1,702 @@
+{
+  "project": {
+    "name": "System Log Writer & Last Timestamp Reader Implementation",
+    "description": "Interdependent Timestamp Logging System",
+    "totalDuration": "3 days",
+    "estimatedEffort": "12.5 hours",
+    "repositoryLocation": "/usr/local/repo4",
+    "deploymentType": "system-wide"
+  },
+  "phases": [
+    {
+      "phaseId": "phase-1",
+      "phaseName": "Environment & Setup",
+      "day": "Day 1",
+      "timeSlot": "Morning",
+      "totalDuration": "1 hour 5 minutes",
+      "description": "Create repository structure, configure permissions, and initialize version control",
+      "tasks": [
+        {
+          "taskId": "1.1",
+          "taskName": "Repository Structure Setup",
+          "duration": "30 minutes",
+          "dependencies": [],
+          "priority": "Critical",
+          "objective": "Create standardized directory structure for system deployment",
+          "deliverables": [
+            "/usr/local/repo4/ directory structure",
+            "Proper ownership and permissions",
+            "Git repository initialized"
+          ],
+          "steps": [
+            "Create system-wide repository: sudo mkdir -p /usr/local/repo4/{bin,config,logs,tests,docs}",
+            "Set ownership: sudo chown $(whoami):staff /usr/local/repo4 -R  # macOS",
+            "Navigate to repository: cd /usr/local/repo4",
+            "Create .gitkeep files: touch logs/.gitkeep tests/.gitkeep docs/.gitkeep"
+          ],
+          "verification": [
+            "ls -la /usr/local/repo4/",
+            "tree /usr/local/repo4  # if tree command available"
+          ],
+          "successCriteria": [
+            "All directories exist with correct permissions",
+            "Repository accessible by user",
+            "Directory structure matches specification"
+          ]
+        },
+        {
+          "taskId": "1.2",
+          "taskName": "Permissions Configuration",
+          "duration": "20 minutes",
+          "dependencies": ["1.1"],
+          "priority": "High",
+          "objective": "Set secure file permissions for system-wide deployment",
+          "deliverables": [
+            "Correct directory permissions (755)",
+            "Logs directory writable by services",
+            "Ownership properly configured"
+          ],
+          "steps": [
+            "Navigate to repository: cd /usr/local/repo4",
+            "Set directory permissions: chmod 755 bin config logs tests docs",
+            "Ensure logs directory is writable: chmod 755 logs",
+            "Verify ownership: ls -la"
+          ],
+          "verification": [
+            "stat -c \"%a %n\" bin config logs tests docs  # Linux",
+            "stat -f \"%A %N\" bin config logs tests docs  # macOS"
+          ],
+          "successCriteria": [
+            "All directories have 755 permissions",
+            "Logs directory accessible for writing",
+            "No permission denied errors"
+          ]
+        },
+        {
+          "taskId": "1.3",
+          "taskName": "Git Repository Initialization",
+          "duration": "15 minutes",
+          "dependencies": ["1.1"],
+          "priority": "Medium",
+          "objective": "Version control setup for tracking changes",
+          "deliverables": [
+            "Git repository initialized",
+            ".gitignore configured for log files",
+            "Initial commit completed"
+          ],
+          "steps": [
+            "Navigate to repository: cd /usr/local/repo4",
+            "Initialize git: git init",
+            "Create .gitignore with log file exclusions",
+            "Add all files: git add .",
+            "Initial commit: git commit -m \"Initial repository structure\""
+          ],
+          "verification": [
+            "git status",
+            "git log --oneline"
+          ],
+          "successCriteria": [
+            "Git repository tracking properly",
+            "Log files excluded from version control",
+            "Clean working directory"
+          ]
+        }
+      ]
+    },
+    {
+      "phaseId": "phase-2",
+      "phaseName": "Core Implementation",
+      "day": "Day 1",
+      "timeSlot": "Afternoon",
+      "totalDuration": "2 hours 30 minutes",
+      "description": "Implement both timestamp programs with proper error handling and signal management",
+      "tasks": [
+        {
+          "taskId": "2.1",
+          "taskName": "System Log Writer Implementation",
+          "duration": "90 minutes",
+          "dependencies": ["1.2"],
+          "priority": "Critical",
+          "objective": "Create the primary timestamp logging service",
+          "deliverables": [
+            "Working system-log-writer.sh script",
+            "Proper signal handling (SIGTERM/SIGINT)",
+            "10-second interval timing",
+            "ISO 8601 timestamp format (YYYY-MM-DD HH:MM:SS)",
+            "Automatic log directory creation"
+          ],
+          "steps": [
+            "Create /usr/local/repo4/bin/system-log-writer.sh",
+            "Implement main loop with 10-second intervals",
+            "Add signal handling for graceful shutdown",
+            "Set timestamp format: YYYY-MM-DD HH:MM:SS",
+            "Make executable: chmod 755 /usr/local/repo4/bin/system-log-writer.sh",
+            "Test implementation for 30 seconds"
+          ],
+          "verification": [
+            "Test run: /usr/local/repo4/bin/system-log-writer.sh &",
+            "Wait 30 seconds and stop with kill",
+            "Check log file: cat /usr/local/repo4/logs/system-logs.log",
+            "Verify timestamp format and 10-second intervals"
+          ],
+          "successCriteria": [
+            "Script runs without errors",
+            "Timestamps appear in log file every 10 seconds",
+            "Graceful shutdown with Ctrl+C",
+            "Log file format correct (YYYY-MM-DD HH:MM:SS)"
+          ]
+        },
+        {
+          "taskId": "2.2",
+          "taskName": "Last Timestamp Reader Implementation",
+          "duration": "60 minutes",
+          "dependencies": ["2.1"],
+          "priority": "Critical",
+          "objective": "Create the timestamp monitoring service",
+          "deliverables": [
+            "Working last-timestamp-reader.sh script",
+            "7-second polling interval",
+            "Proper error handling for missing/empty files",
+            "Clear output format"
+          ],
+          "steps": [
+            "Create /usr/local/repo4/bin/last-timestamp-reader.sh",
+            "Implement main loop with 7-second intervals",
+            "Add error handling for file not found, empty file",
+            "Add signal handling for graceful shutdown",
+            "Make executable: chmod 755 /usr/local/repo4/bin/last-timestamp-reader.sh",
+            "Test both programs together"
+          ],
+          "verification": [
+            "Start writer: /usr/local/repo4/bin/system-log-writer.sh &",
+            "Start reader: /usr/local/repo4/bin/last-timestamp-reader.sh &",
+            "Let them run for 45 seconds",
+            "Stop both and verify coordination"
+          ],
+          "successCriteria": [
+            "Both programs run simultaneously without conflicts",
+            "Reader displays last timestamp every 7 seconds",
+            "Proper error handling when log file missing",
+            "Clean shutdown of both processes"
+          ]
+        }
+      ]
+    },
+    {
+      "phaseId": "phase-3",
+      "phaseName": "Service Configuration",
+      "day": "Day 2",
+      "timeSlot": "Morning",
+      "totalDuration": "1 hour 30 minutes",
+      "description": "Configure automatic service management with monitoring capabilities",
+      "tasks": [
+        {
+          "taskId": "3.1",
+          "taskName": "macOS Service Configuration",
+          "duration": "45 minutes",
+          "dependencies": ["2.2"],
+          "priority": "High",
+          "condition": "macOS deployment",
+          "objective": "Configure automatic service management for macOS",
+          "deliverables": [
+            "launchd plist files for both services",
+            "Service installation script",
+            "Automatic restart configuration",
+            "Proper logging to service log files"
+          ],
+          "steps": [
+            "Create config/com.user.system-log-writer.plist",
+            "Create config/com.user.last-timestamp-reader.plist",
+            "Configure RunAtLoad and KeepAlive for auto-restart",
+            "Set proper paths and working directory",
+            "Create bin/install-services-macos.sh",
+            "Make installation script executable: chmod 755"
+          ],
+          "verification": [
+            "Run installation: /usr/local/repo4/bin/install-services-macos.sh",
+            "Check service status: launchctl list | grep com.user",
+            "Verify log files being created: ls -la /usr/local/repo4/logs/"
+          ],
+          "successCriteria": [
+            "Services load without errors",
+            "Services appear in launchctl list",
+            "Auto-restart functionality working",
+            "Services start on boot"
+          ]
+        },
+        {
+          "taskId": "3.2",
+          "taskName": "Service Monitoring Setup",
+          "duration": "45 minutes",
+          "dependencies": ["3.1"],
+          "priority": "High",
+          "objective": "Create monitoring and health check capabilities",
+          "deliverables": [
+            "Comprehensive service monitoring script",
+            "Health check that verifies actual functionality",
+            "Error log analysis",
+            "Service status reporting"
+          ],
+          "steps": [
+            "Create bin/monitor-services-macos.sh",
+            "Implement service status checking via launchctl",
+            "Add health check with timestamp validation",
+            "Add error log analysis",
+            "Make executable: chmod 755",
+            "Test monitoring functionality"
+          ],
+          "verification": [
+            "Run monitoring: /usr/local/repo4/bin/monitor-services-macos.sh",
+            "Verify accurate detection of service health",
+            "Test with services stopped and started"
+          ],
+          "successCriteria": [
+            "Services load and start automatically",
+            "Monitoring script accurately detects service health",
+            "Services restart on failure",
+            "Clear status reporting available"
+          ]
+        }
+      ]
+    },
+    {
+      "phaseId": "phase-4",
+      "phaseName": "Testing & Validation",
+      "day": "Day 2",
+      "timeSlot": "Afternoon",
+      "totalDuration": "3 hours",
+      "description": "Comprehensive testing including integration, performance, and stress testing",
+      "tasks": [
+        {
+          "taskId": "4.1",
+          "taskName": "Integration Testing",
+          "duration": "90 minutes",
+          "dependencies": ["3.2"],
+          "priority": "Critical",
+          "objective": "Validate complete system functionality",
+          "deliverables": [
+            "Basic functionality verification",
+            "Service recovery testing",
+            "Error handling validation",
+            "Performance baseline measurements"
+          ],
+          "steps": [
+            "Run installation and start services",
+            "Test basic functionality for 30 seconds",
+            "Test service recovery by killing processes",
+            "Test log file handling with missing/empty files",
+            "Validate timing accuracy",
+            "Check resource usage"
+          ],
+          "verification": [
+            "/usr/local/repo4/bin/install-services-macos.sh",
+            "Wait 30 seconds and run monitoring",
+            "Kill services and verify auto-restart",
+            "Check log entries count and timing"
+          ],
+          "successCriteria": [
+            "All integration tests pass",
+            "Services recover from failures",
+            "Error handling works correctly",
+            "Timing accuracy within ±1 second"
+          ]
+        },
+        {
+          "taskId": "4.2",
+          "taskName": "Performance Validation",
+          "duration": "60 minutes",
+          "dependencies": ["4.1"],
+          "priority": "Medium",
+          "objective": "Ensure system meets performance specifications",
+          "deliverables": [
+            "Resource usage measurements (<0.1% CPU per service)",
+            "Timing accuracy validation (±1 second tolerance)",
+            "Memory usage confirmation (~10-15MB per service)",
+            "Disk I/O impact assessment"
+          ],
+          "steps": [
+            "Monitor resource usage with top command",
+            "Create timing analysis script",
+            "Run 10-minute performance test",
+            "Measure disk usage growth",
+            "Validate memory footprint"
+          ],
+          "verification": [
+            "Monitor with: top -pid $(pgrep -f system-log-writer.sh)",
+            "Check disk usage: du -h /usr/local/repo4/logs/",
+            "Run timing test for accuracy validation"
+          ],
+          "successCriteria": [
+            "CPU usage <0.1% per service",
+            "Memory usage ~10-15MB per service",
+            "Timing accuracy within specifications",
+            "Minimal disk I/O impact"
+          ]
+        },
+        {
+          "taskId": "4.3",
+          "taskName": "Stress Testing",
+          "duration": "30 minutes",
+          "dependencies": ["4.2"],
+          "priority": "Low",
+          "objective": "Test system under stress conditions",
+          "deliverables": [
+            "System stability under I/O stress",
+            "Service resilience validation",
+            "Performance degradation assessment"
+          ],
+          "steps": [
+            "Create high I/O load with dd command",
+            "Monitor services during stress test",
+            "Run for 15 minutes",
+            "Check service health during stress",
+            "Clean up stress test files"
+          ],
+          "verification": [
+            "dd if=/dev/zero of=/tmp/stress_file bs=1M count=100 &",
+            "Monitor: /usr/local/repo4/bin/monitor-services-macos.sh",
+            "Verify services remain stable"
+          ],
+          "successCriteria": [
+            "All integration tests pass",
+            "Performance within specifications",
+            "Services stable under stress",
+            "Timing accuracy maintained"
+          ]
+        }
+      ]
+    },
+    {
+      "phaseId": "phase-5",
+      "phaseName": "Monitoring & Tools",
+      "day": "Day 3",
+      "timeSlot": "Morning",
+      "totalDuration": "2 hours",
+      "description": "Implement log management, rotation, and advanced monitoring capabilities",
+      "tasks": [
+        {
+          "taskId": "5.1",
+          "taskName": "Log Management Configuration",
+          "duration": "60 minutes",
+          "dependencies": ["4.3"],
+          "priority": "Medium",
+          "objective": "Implement log rotation and maintenance",
+          "deliverables": [
+            "Log rotation configuration",
+            "Automated cleanup script",
+            "Disk space management"
+          ],
+          "steps": [
+            "Create config/logrotate.conf for timestamp logs",
+            "Configure daily rotation with 7-day retention",
+            "Create bin/cleanup-logs.sh for maintenance",
+            "Set up compression for old logs",
+            "Make cleanup script executable"
+          ],
+          "verification": [
+            "Test cleanup script: /usr/local/repo4/bin/cleanup-logs.sh",
+            "Verify logrotate configuration syntax",
+            "Check disk space management"
+          ],
+          "successCriteria": [
+            "Log rotation configuration created",
+            "Cleanup script removes old files",
+            "Archive management working",
+            "Disk space management in place"
+          ]
+        },
+        {
+          "taskId": "5.2",
+          "taskName": "Advanced Monitoring Setup",
+          "duration": "60 minutes",
+          "dependencies": ["5.1"],
+          "priority": "High",
+          "objective": "Enhanced monitoring and alerting capabilities",
+          "deliverables": [
+            "Comprehensive health checking",
+            "Exit codes for automation",
+            "Disk space monitoring",
+            "Service status validation"
+          ],
+          "steps": [
+            "Create bin/health-check.sh with comprehensive checks",
+            "Implement service status validation",
+            "Add log freshness checking",
+            "Add disk space monitoring",
+            "Configure exit codes for automation",
+            "Test all health check scenarios"
+          ],
+          "verification": [
+            "Run health check: /usr/local/repo4/bin/health-check.sh",
+            "Test with services stopped",
+            "Verify exit codes work correctly"
+          ],
+          "successCriteria": [
+            "Log rotation working correctly",
+            "Health checks accurate and reliable",
+            "Monitoring covers all failure modes",
+            "Cleanup automation functional"
+          ]
+        }
+      ]
+    },
+    {
+      "phaseId": "phase-6",
+      "phaseName": "Documentation & Deployment",
+      "day": "Day 3",
+      "timeSlot": "Afternoon",
+      "totalDuration": "2 hours",
+      "description": "Create comprehensive documentation and perform final system validation",
+      "tasks": [
+        {
+          "taskId": "6.1",
+          "taskName": "Create Deployment README",
+          "duration": "60 minutes",
+          "dependencies": ["5.2"],
+          "priority": "High",
+          "objective": "Comprehensive documentation for system operation",
+          "deliverables": [
+            "Comprehensive README.md",
+            "Quick start guide",
+            "Troubleshooting documentation",
+            "Maintenance procedures"
+          ],
+          "steps": [
+            "Create main README.md with project overview",
+            "Document installation procedures",
+            "Add service management instructions",
+            "Include monitoring and health check guides",
+            "Add troubleshooting section",
+            "Document maintenance procedures"
+          ],
+          "verification": [
+            "Review README for completeness",
+            "Test installation instructions",
+            "Validate troubleshooting steps work"
+          ],
+          "successCriteria": [
+            "README is comprehensive and clear",
+            "Installation instructions work",
+            "Troubleshooting covers common issues",
+            "Examples are accurate"
+          ]
+        },
+        {
+          "taskId": "6.2",
+          "taskName": "Final System Validation",
+          "duration": "60 minutes",
+          "dependencies": ["6.1"],
+          "priority": "Critical",
+          "objective": "Complete end-to-end validation before production",
+          "deliverables": [
+            "Complete system validation",
+            "Performance testing",
+            "Documentation review"
+          ],
+          "steps": [
+            "Unload all services for fresh start",
+            "Clean all log files",
+            "Run complete installation",
+            "Wait 60 seconds for operation",
+            "Run comprehensive health check",
+            "Validate all documentation procedures",
+            "Test service management commands",
+            "Verify monitoring scripts work"
+          ],
+          "verification": [
+            "Fresh installation test successful",
+            "All health checks pass",
+            "All documentation procedures work",
+            "Performance within specifications"
+          ],
+          "successCriteria": [
+            "Complete system operational",
+            "All documentation accurate and tested",
+            "Ready for production deployment",
+            "Monitoring and maintenance procedures in place"
+          ]
+        }
+      ]
+    }
+  ],
+  "successCriteria": {
+    "overall": [
+      "Both services running automatically",
+      "Timestamps being written every 10 seconds",
+      "Reader displaying timestamps every 7 seconds",
+      "Health checks passing",
+      "Monitoring scripts working",
+      "Documentation accurate",
+      "Performance within specifications",
+      "Services restart on failure",
+      "System ready for production"
+    ],
+    "byPhase": {
+      "phase1": [
+        "Repository structure created with correct permissions",
+        "Git repository initialized and tracking",
+        "System ready for implementation"
+      ],
+      "phase2": [
+        "System Log Writer functional with 10-second intervals",
+        "Last Timestamp Reader working with 7-second intervals",
+        "Both programs handle signals gracefully",
+        "Proper error handling implemented"
+      ],
+      "phase3": [
+        "Services auto-start on boot",
+        "Automatic restart on failure",
+        "Service management working correctly",
+        "Monitoring capabilities in place"
+      ],
+      "phase4": [
+        "Integration testing successful",
+        "Performance within specifications",
+        "Services stable under stress",
+        "All failure modes tested"
+      ],
+      "phase5": [
+        "Log rotation configured",
+        "Health checks comprehensive and accurate",
+        "Maintenance automation in place",
+        "Monitoring covers all scenarios"
+      ],
+      "phase6": [
+        "Documentation complete and accurate",
+        "All procedures tested and verified",
+        "System ready for production",
+        "Maintenance procedures documented"
+      ]
+    }
+  },
+  "commonIssues": [
+    {
+      "issue": "Services won't start",
+      "symptoms": ["launchctl list shows no services", "No log files created"],
+      "quickFix": "Check permissions: chmod 755 /usr/local/repo4/bin/*.sh",
+      "prevention": "Use installation script",
+      "diagnosticCommands": [
+        "ls -la /usr/local/repo4/bin/",
+        "launchctl list | grep com.user",
+        "tail /usr/local/repo4/logs/*-error.log"
+      ]
+    },
+    {
+      "issue": "No log entries",
+      "symptoms": ["Empty or missing system-logs.log", "Reader shows 'file not found'"],
+      "quickFix": "Verify scripts are executable and running",
+      "prevention": "Monitor service status",
+      "diagnosticCommands": [
+        "pgrep -f system-log-writer.sh",
+        "ls -la /usr/local/repo4/logs/",
+        "/usr/local/repo4/bin/system-log-writer.sh"
+      ]
+    },
+    {
+      "issue": "Reader shows 'file not found'",
+      "symptoms": ["Reader output shows file not found", "Writer not creating log"],
+      "quickFix": "Ensure writer is running first",
+      "prevention": "Service dependencies",
+      "diagnosticCommands": [
+        "launchctl list | grep system-log-writer",
+        "cat /usr/local/repo4/logs/system-logs.log"
+      ]
+    },
+    {
+      "issue": "High resource usage",
+      "symptoms": ["High CPU usage", "Memory growth"],
+      "quickFix": "Check for multiple instances running",
+      "prevention": "Proper service management",
+      "diagnosticCommands": [
+        "pgrep -f system-log-writer.sh | wc -l",
+        "top -pid $(pgrep -f system-log-writer.sh)"
+      ]
+    },
+    {
+      "issue": "Log file corruption",
+      "symptoms": ["Malformed timestamps", "Reader errors"],
+      "quickFix": "Stop services, restore from backup",
+      "prevention": "Implement proper log rotation",
+      "diagnosticCommands": [
+        "tail /usr/local/repo4/logs/system-logs.log",
+        "wc -l /usr/local/repo4/logs/system-logs.log"
+      ]
+    }
+  ],
+  "performanceExpectations": {
+    "resourceUsage": {
+      "cpu": "<0.1% per service",
+      "memory": "~10-15MB per service",
+      "diskIO": "Minimal (append-only writes)",
+      "networkIO": "None required"
+    },
+    "timingAccuracy": {
+      "writer": "10-second intervals (±1 second acceptable)",
+      "reader": "7-second intervals (±1 second acceptable)",
+      "systemResponse": "<1 second for health checks"
+    },
+    "reliability": {
+      "uptime": ">99.9% (excluding planned maintenance)",
+      "dataLoss": "<0.01% acceptable",
+      "recoveryTime": "<30 seconds after failure",
+      "logGrowth": "~50KB per day"
+    },
+    "scalability": {
+      "maxLogSize": "Limited by disk space",
+      "rotationFrequency": "Daily (configurable)",
+      "retentionPeriod": "7 days (configurable)",
+      "multipleReaders": "Supported"
+    }
+  },
+  "maintenanceProcedures": {
+    "daily": [
+      "Run health check: /usr/local/repo4/bin/health-check.sh",
+      "Check error logs for issues"
+    ],
+    "weekly": [
+      "Run log cleanup: /usr/local/repo4/bin/cleanup-logs.sh",
+      "Verify service status and auto-restart"
+    ],
+    "monthly": [
+      "Review disk usage and log growth",
+      "Update rotation policies if needed",
+      "Performance review and optimization"
+    ],
+    "asNeeded": [
+      "Service updates and configuration changes",
+      "Backup and recovery testing",
+      "Security audit and permission review"
+    ]
+  },
+  "deploymentChecklist": [
+    "All phases completed successfully",
+    "All tests passing",
+    "Services running automatically",
+    "Monitoring functional",
+    "Documentation accurate",
+    "Performance within specifications",
+    "Security model implemented correctly",
+    "Backup procedures in place",
+    "Ready for production use"
+  ],
+  "toolsAndScripts": {
+    "installation": "/usr/local/repo4/bin/install-services-macos.sh",
+    "monitoring": "/usr/local/repo4/bin/monitor-services-macos.sh",
+    "healthCheck": "/usr/local/repo4/bin/health-check.sh",
+    "logCleanup": "/usr/local/repo4/bin/cleanup-logs.sh",
+    "timingTest": "/usr/local/repo4/bin/test-timing.sh"
+  },
+  "configurationFiles": {
+    "writerService": "/usr/local/repo4/config/com.user.system-log-writer.plist",
+    "readerService": "/usr/local/repo4/config/com.user.last-timestamp-reader.plist",
+    "logRotation": "/usr/local/repo4/config/logrotate.conf",
+    "gitIgnore": "/usr/local/repo4/.gitignore"
+  },
+  "logFiles": {
+    "shared": "/usr/local/repo4/logs/system-logs.log",
+    "writerOutput": "/usr/local/repo4/logs/system-log-writer.log",
+    "readerOutput": "/usr/local/repo4/logs/last-timestamp-reader.log",
+    "writerErrors": "/usr/local/repo4/logs/system-log-writer-error.log",
+    "readerErrors": "/usr/local/repo4/logs/last-timestamp-reader-error.log"
+  }
+}
